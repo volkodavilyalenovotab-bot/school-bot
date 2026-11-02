@@ -118,7 +118,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
   )
   await state.clear()
 
-  async def handle(request):
+async def handle(request):
     return web.Response(text="Bot is running!")
 
 app = web.Application()
