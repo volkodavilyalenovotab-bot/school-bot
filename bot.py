@@ -13,6 +13,7 @@ from aiogram.types import (
 )
 
 TOKEN = "9283167555:AAEeuL_Q7y1wTvYvjh3siUY5UaobvxPL6X4"
+bot = Bot(token=TOKEN)
 
 ADMIN_CHAT_ID = -5595096634
 
