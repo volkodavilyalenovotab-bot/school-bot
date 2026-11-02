@@ -17,7 +17,8 @@ TOKEN = "9283167555:AAEeuL_Q7y1wTvYvjh3siUY5UaobvxPL6X4"
 ADMIN_CHAT_ID = -5595096634
 
 router = Router()
-
+dp = Dispatcher()
+dp.include_router(router)
 
 # Состояния для Машины Состояний (FSM)
 class FeedbackState(StatesGroup):
