@@ -1,3 +1,4 @@
+from aiohttp import web
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher, F, Router
@@ -117,17 +118,21 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
   )
   await state.clear()
 
+  async def handle(request):
+    return web.Response(text="Bot is running!")
+
+app = web.Application()
+app.router.add_get("/", handle)
+
+async def web_server():
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", 10000)
+    await site.start()
 
 async def main():
-  logging.basicConfig(level=logging.INFO)
-  bot = Bot(token=TOKEN)
-  dp = Dispatcher()
-  dp.include_router(router)
-
-  print("Бот запущен и готов к работе!")
-  await dp.start_polling(bot)
-
+    await asyncio.gather(web_server(), dp.start_polling(bot))
 
 if __name__ == "__main__":
-  asyncio.run(main())
-  
+    asyncio.run(main())
+    
