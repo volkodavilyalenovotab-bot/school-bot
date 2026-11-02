@@ -201,4 +201,34 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    
+    # Команда для ответа ученику по его ID: /answer ID текст_ответа
+@router.message(F.text.startswith("/answer"))
+async def answer_user(message: Message, bot: Bot):
+    # Проверяем, что команду отправляешь именно ты (администратор)
+    if message.from_user.id != ADMIN_CHAT_ID:
+        await message.answer("У тебя нет прав для выполнения этой команды.")
+        return
+
+    # Разбираем сообщение на части: /answer, ID, и сам текст
+    parts = message.text.split(maxsplit=2)
+    if len(parts) < 3:
+        await message.answer(
+            "⚠️ Неправильный формат!\nИспользуй так:\n`/answer [ID] [текст ответа]`",
+            parse_mode="Markdown"
+        )
+        return
+
+    try:
+        user_id = int(parts[1])
+        reply_text = parts[2]
+
+        # Отправляем ответ ученику в личные сообщения
+        await bot.send_message(
+            user_id,
+            f"💬 **Ответ от администрации:**\n\n{reply_text}",
+            parse_mode="Markdown"
+        )
+        await message.answer("✅ Ответ успешно отправлен ученику!")
+    except Exception as e:
+        await message.answer(f"❌ Ошибка при отправке: {e}")
+
